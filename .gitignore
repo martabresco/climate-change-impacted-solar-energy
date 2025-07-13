@@ -1,0 +1,21 @@
+atlite examples/eeg_anlagenregister_2015.08.utf8.csv
+atlite examples/eeg_anlagenregister_2015.08.utf8.csv
+atlite examples/sarah2/ORD58962/ORD58962.tar
+atlite examples/sarah2/ORD58963/ORD58963.tar
+europe_solar.nc
+rsds_3hr_MPI-ESM1-2-HR_historical_r1i1p1f1_gn_201001010130-201412312230.nc
+rsds_3hr_MPI-ESM1-2-LR_historical_r1i1p1f1_gn_197001010130-198912312230.nc
+rsds_3hr_MPI-ESM1-2-LR_historical_r1i1p1f1_gn_201001010130-201412312230.nc
+rsds_3hr_MPI-ESM1-2-LR_historical_r1i1p1f1_gn_199001010130-200912312230.nc
+*.nc
+atlite_examples/eeg_anlagenregister_2015.08.utf8.csv
+/atlite_examples/mv_github
+*.csv
+repo-mirror.git/
+*.nc
+*.pdf
+*.pyc
+*.png
+*.out
+*.tar
+*.tmp
