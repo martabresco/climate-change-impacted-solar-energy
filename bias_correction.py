@@ -10,15 +10,6 @@ from regridding_functions import read_and_average_era5_marta
 from regridding_functions import read_and_average_cmip
 import os
 
-def fill_nans_with_last_valid(bias_factor):
-    #for Sarah, fills the Nan values of the bias factor along the latitude axis with the last valid value
-    for lon in range(bias_factor.shape[1]):  # Iterate over longitudes (second axis)
-        valid_values = ~np.isnan(bias_factor[:, lon])  # Find valid (non-NaN) indices along latitude
-        if np.any(valid_values):  # If there's at least one valid value
-            last_valid_idx = np.max(np.where(valid_values))  # Get the last valid latitude index
-            bias_factor[last_valid_idx+1:, lon] = bias_factor[last_valid_idx, lon]  # Fill NaNs downward
-    
-    return bias_factor
 
 def bias_factor_era5_sarah(var):
     #calculates the bias factor between era5 and sarah for the variable var, for now only 4 years data
@@ -33,7 +24,6 @@ def bias_factor_era5_sarah(var):
     # Ensure valid bias factor calculation
     mask_valid = (denominator_era5_sarah != 0) & (numerator_era5_sarah != 0) # Avoid division by zero and all values in sarah that have mean 0
     bias_factor_era5_sarah = np.where(mask_valid, numerator_era5_sarah / denominator_era5_sarah, np.nan)  # Replace invalid cases with NaN
-    #bias_factor_era5_sarah = fill_nans_with_last_valid(bias_factor_era5_sarah)  # Fill NaNs downward
     print(f"Shape of bias_factor_era5_sarah: {bias_factor_era5_sarah.shape}")
     return bias_factor_era5_sarah
 
