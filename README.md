@@ -27,6 +27,21 @@ mean ERA5 albedo for historical period regridded to each model's original grid
 # Codes
 All codes used to generate the results, uploaded to Github repository
 
-- regridding_functions.py: 
+- regridding_functions.py: auxiliary functions to average ERA5, SARAH-3 and CMIP6 variables for bias correction, regridding function (based on Andrea's work), returns regridder
 - bias_correction.py: to obtain bias factor per model and component in original grid. Includes the two step bias correction. Requires an .nc with 0.3 grid and auxiliary regridding functions 
-- 
+
+
+- pv_functions.py: contains SolarPosition (change in time index handling), get_oritnation, make_latitude_optimal, surface_orientation, diffuseHorizontalIrrad, TiltedDiffuseIrrad, TiltedDirectIrrad, ToltedGroundIrrad (takes albedo regridded to each model's grid), TiltedIrrad (main change: redefining influx_toa, influx direct and influx diffuse). 
+- power_calculation.py: code to transform from the CMIP6 yearly files to solar CF. Handles the calendar standarization and includes the multiplication by the bias factors. Uses the pv functions from atlite modified as necessary in pv_functions.py. after CF has been calculated, it is multiplied x3 to represent all power in the period. Results for every 3h and yearly aggregation are saved as .nc
+- aggregated_CF_values.py: perform annual or seasonal aggregation of solar CF (with or without temp effect)
+- power_era5_yearly: obtain yearly solar CF from ERA5
+- power_era5_hourly.py: obtain solar CF from hourly ERA5 cutouts applying atlite functions (necessary for energy drought evaluation)
+
+
+
+
+- compute_and_save_temp_diffs.py: compute absolute and relative differences in temperature between BoC and EoC
+
+
+- plots.py: auxiliary plotting functions (ignore)
+- models_to_1x1.py, Era5_to_1x1.py: to regrid all solar CF time series from model grid and ERA5 grid to 1x1 grid. Needs a .nc file with 1x1 grid. 

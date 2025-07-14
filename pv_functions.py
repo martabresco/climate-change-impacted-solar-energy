@@ -1,48 +1,25 @@
 from __future__ import annotations
-import xarray as xr
-import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
-import numpy as np
-import logging 
-logging.basicConfig(level=logging.INFO)
-import atlite
 
-
-import datetime as dt
+import sys
 import logging
-from collections import namedtuple
-from operator import itemgetter
-from pathlib import Path
-from typing import TYPE_CHECKING
 
-import geopandas as gpd
 import numpy as np
 import pandas as pd
 import xarray as xr
-from dask import compute, delayed
-from dask.array import absolute, arccos, cos, maximum, mod, radians, sin, sqrt, arcsin, arctan2, radians, arctan
-from dask.diagnostics import ProgressBar
-from numpy import pi
-from scipy.sparse import csr_matrix
-from atlite.aggregate import aggregate_matrix
-from atlite.gis import spdiag
-from numpy import pi
-import sys
-from numpy import logical_and
 
-from atlite import csp as cspm
+from dask.array import (
+    absolute, arccos, arcsin, arctan, arctan2, cos, maximum, mod,
+    radians, sin, sqrt
+)
+
 
 from regridding_functions import regrid
 
-filepath_model="/groups/FutureWind/SFCRAD/CanESM5/historical/r1i1p2f1/rsds_rsdsdiff_tas_2014.nc"
-ds_model_2014 = xr.open_dataset(filepath_model, decode_times=True)
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
-from regridding_functions import read_and_average_era5_marta
-mean_albedo_Era5=read_and_average_era5_marta('albedo')
-from regridding_functions import regrid
-regridder_era5_model=regrid(mean_albedo_Era5, ds_model_2014, method='conservative')
-mean_albedo=regridder_era5_model(mean_albedo_Era5) #regrid the mean albedo to the model grid
+
+
 
 
 def SolarPosition(ds, time_shift="0H"):
@@ -267,19 +244,19 @@ def SurfaceOrientation(ds, solar_position, orientation, tracking=None):
 
         azimuth_difference = sun_azimuth - surface_azimuth
         azimuth_difference = np.where(
-            azimuth_difference > pi, 2 * pi - azimuth_difference, azimuth_difference
+            azimuth_difference > np.pi, 2 * np.pi - azimuth_difference, azimuth_difference
         )
         azimuth_difference = np.where(
-            azimuth_difference < -pi, 2 * pi + azimuth_difference, azimuth_difference
+            azimuth_difference < -np.pi, 2 * np.pi + azimuth_difference, azimuth_difference
         )
         rotation = np.where(
-            logical_and(rotation < 0, azimuth_difference > 0),
-            rotation + pi,
+            np.logical_and(rotation < 0, azimuth_difference > 0),
+            rotation + np.pi,
             rotation,
         )
         rotation = np.where(
-            logical_and(rotation > 0, azimuth_difference < 0),
-            rotation - pi,
+            np.logical_and(rotation > 0, azimuth_difference < 0),
+            rotation - np.pi,
             rotation,
         )
 
@@ -315,9 +292,6 @@ def SurfaceOrientation(ds, solar_position, orientation, tracking=None):
         }
     )
 
-# SPDX-FileCopyrightText: Contributors to atlite <https://github.com/pypsa/atlite>
-#
-# SPDX-License-Identifier: MIT
 
 import logging
 
@@ -649,47 +623,3 @@ def SolarPanelModel(ds, irradiance, pc,bf_tas):
         AssertionError(f"Unknown panel model: {model}")
 
 
-panel = {
-    "model": "huld",  # Model type
-    "name": "CSi",  # Panel name
-    "source": "Huld 2010",  # Source of the model
-
-    # Used for calculating capacity per m2
-    "efficiency": 0.1,  # Efficiency of the panel
-
-    # Panel temperature coefficients
-    "c_temp_amb": 1,  # Panel temperature coefficient of ambient temperature
-    "c_temp_irrad": 0.035,  # Panel temperature coefficient of irradiance (K / (W/m2))
-
-    # Reference conditions
-    "r_tamb": 293,  # Reference ambient temperature (20 degC in Kelvin)
-    "r_tmod": 298,  # Reference module temperature (25 degC in Kelvin)
-    "r_irradiance": 1000,  # Reference irradiance (W/m^2)
-
-    # Fitting parameters
-    "k_1": -0.017162,
-    "k_2": -0.040289,
-    "k_3": -0.004681,
-    "k_4": 0.000148,
-    "k_5": 0.000169,
-    "k_6": 0.000005,
-
-    # Inverter efficiency
-    "inverter_efficiency": 0.9
-}
-import os
-def albedo_for_model(models, variants):
-    mean_albedo_era5 = read_and_average_era5_marta("albedo")
-    output_dir = "/work/users/s233224/Climate-Change-Impacted-Solar-Energy-Generation/albedo/"
-    os.makedirs(output_dir, exist_ok=True)
-    for model, variant in zip(models, variants):
-        try:
-            filepath = f"/groups/FutureWind/SFCRAD/{model}/historical/{variant}/rsds_rsdsdiff_tas_2010.nc"
-            ds_model = xr.open_dataset(filepath, engine="netcdf4")  # Explicitly specify the engine
-            regridder_model = regrid(mean_albedo_era5, ds_model)
-            albedo_model = regridder_model(mean_albedo_era5)
-            output_path = os.path.join(output_dir, f"mean_albedo_grid_{model}.nc")
-            albedo_model.to_netcdf(output_path)
-            print(f"Saved regridded mean albedo for {model} to {output_path}")
-        except Exception as e:
-            print(f"Failed for model {model}: {e}")

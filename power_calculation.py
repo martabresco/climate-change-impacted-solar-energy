@@ -47,11 +47,7 @@ def collect_files(base_path, models, variants, periods):
 
     return files_model
 
-import xarray as xr
-import numpy as np
-import pandas as pd
 import calendar
-import cftime
 from datetime import datetime
 
 def convert_360_to_gregorian_direct(ds: xr.Dataset, year: int) -> xr.Dataset:
@@ -124,19 +120,12 @@ def is_leap_year(year):
     """
     return (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)
 
-import xarray as xr
-import numpy as np
-import pandas as pd
 
 def add_february_29(ds, year):
     """
     Add February 29 to a dataset with a noleap calendar by duplicating all Feb 28 timestamps.
     Handles 3-hourly (or any sub-daily) datasets correctly.
     """
-    import numpy as np
-    import pandas as pd
-    import xarray as xr
-
     if is_leap_year(year):
         # Check if the time coordinate is in cftime format
         if isinstance(ds['time'].values[0], cftime.DatetimeNoLeap):
@@ -284,7 +273,7 @@ def power_calculation(files, orientation1, trigon_model, clearsky_model, trackin
                     solar_panel = pv_functions.SolarPanelModel(ds, irradiation_model, panel, bf_temp)
                     print('Solar power calculated with hourly means')
 
-                    total_solar_power=3 * solar_panel #I multiply times 3 to get the 
+                    total_solar_power=3 * solar_panel #I multiply times 3 to get the irradiance in all period
 
 
                     aggregated_generation = total_solar_power.sum(dim="time")
@@ -322,11 +311,6 @@ def power_calculation(files, orientation1, trigon_model, clearsky_model, trackin
 
 def main():
     base_path="/groups/FutureWind/SFCRAD/" 
-    # ACCESS-CM2", "CanESM5", "CMCC-CM2-SR5", "CMCC-ESM2", ,"HadGEM3-GC31-LL", "HadGEM3-GC31-MM" "MRI-ESM2-0 , 
-    # "r1i1p1f1" "r1i1p2f1", "r1i1p1f1", "r1i1p1f1", ,"r1i1p1f3", "r1i1p1f3", "r1i1p1f1"
-    #models = ["ACCESS-CM2", "CanESM5", "CMCC-CM2-SR5", "CMCC-ESM2", "HadGEM3-GC31-LL", "HadGEM3-GC31-MM", "MRI-ESM2-0"]
-    #variants = ["r1i1p1f1", "r1i1p2f1", "r1i1p1f1", "r1i1p1f1", "r1i1p1f3", "r1i1p1f3", "r1i1p1f1"]
-    #period = ["historical","ssp585"]
     models = ["ACCESS-CM2", "CanESM5", "CMCC-CM2-SR5", "CMCC-ESM2", "HadGEM3-GC31-LL", "HadGEM3-GC31-MM", "MRI-ESM2-0"]  # Test with only one model
     variants = ["r1i1p1f1", "r1i1p2f1", "r1i1p1f1", "r1i1p1f1", "r1i1p1f3", "r1i1p1f3", "r1i1p1f1"]  # Corresponding variant for the model
     period = ["historical","ssp585"]
@@ -336,6 +320,7 @@ def main():
     trigon_model='simple'
     clearsky_model='simple'
     tracking=None
+    # Change panel parameters and output directory 
     panel = {
         "model": "huld",  # Model type
         "name": "CSi",  # Panel name
@@ -361,7 +346,7 @@ def main():
         "k_5": 0,
         "k_6": 0,
 
-                # Fitting parameters
+        # Fitting parameters including temp effect
         #"k_1": -0.017162,
         #"k_2": -0.040289,
         #"k_3": -0.004681,
@@ -377,12 +362,6 @@ def main():
     files=collect_files(base_path, models, variants, period)
     # Filter files for the year 1988
      
-    """ for model in files:
-        for period_key in files[model]:
-            files[model][period_key] = [
-                file for file in files[model][period_key] if "1988" in file
-            ] 
- """
     power_calculation(files, orientation1, trigon_model, clearsky_model, tracking, panel, output_dir)
 
 if __name__ == "__main__":

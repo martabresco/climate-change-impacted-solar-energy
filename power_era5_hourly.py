@@ -1,4 +1,4 @@
-from BOC_Era5_power import collect_files_era5
+from era5_power_yearly import collect_files_era5
 import re, os
 import xarray as xr
 from regridding_functions import read_and_average_era5_4y, read_and_average_sarah, regrid
