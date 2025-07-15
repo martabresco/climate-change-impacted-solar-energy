@@ -24,6 +24,7 @@ This project analyzes how solar energy generation across Europe is affected by c
    - [Energy Drought Analysis](#energy-drought-analysis)
    - [ERA5 vs CMIP6 Comparison](#era5-vs-cmip6-comparison)
    - [Regridding Utilities](#regridding-utilities)
+3. [Others](#others)
 ---
 
 ## Data
@@ -125,3 +126,9 @@ All codes used to generate the results, uploaded to Github repository
 - **plots.py**: auxiliary plotting functions (ignore)  
 - **models_to_1x1.py**, **Era5_to_1x1.py**: to regrid all solar CF time series from model grid and ERA5 grid to 1x1 grid. Needs a `.nc` file with 1x1 grid.  
 
+## Others
+- **file processing**: 
+    - auxiliary codes for downloading and processing CMIP6 data
+- **for plotting**: 
+    - auxiliary codes for plotting results
+- **old**: previous versions, trials etc

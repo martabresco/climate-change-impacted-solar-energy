@@ -4,12 +4,60 @@ import numpy as np
 from datetime import timedelta
 from glob import glob
 import cftime
-from future_wind_copy import combine_hemispheres 
 from datetime import datetime
 import os
 import re
 from collections import defaultdict
 
+
+def combine_hemispheres(var,time=None,lev=None,for_interp=False, 
+    reverse_lev=False, 
+    minlat=20.,maxlat=75.,minlon=330.,maxlon=50.):  
+    '''Combine array (var) from both hemispheres with continuous
+    coordinates.
+    In some datasets the vertical coordinate is reversed.'''
+
+    min_lat = minlat ; max_lat = maxlat
+    min_lon = minlon ; max_lon = maxlon
+
+    # print(lev)
+
+    if (for_interp):
+        min_lat = minlat - 5. ; max_lat = maxlat + 5.
+        min_lon = minlon - 5. ; max_lon = maxlon + 5.
+
+    if time is None and lev is None:
+        west = var.sel(lat=slice(min_lat,max_lat),lon=slice(min_lon,360.))
+        west['lon'] = west['lon'] - 360.
+        east = var.sel(lat=slice(min_lat,max_lat),lon=slice(0.,max_lon))
+
+    elif lev is None:
+        west = var.sel(lat=slice(min_lat,max_lat),lon=slice(min_lon,360.),
+                       time=time)
+        west['lon'] = west['lon'] - 360.
+        east = var.sel(lat=slice(min_lat,max_lat),lon=slice(0.,max_lon),
+                       time=time)
+        
+    elif isinstance(lev,int) and lev==0:
+        west = var.sel(lat=slice(min_lat,max_lat),lon=slice(min_lon,360.),
+                       time=time).isel(lev=0)
+        west['lon'] = west['lon'] - 360.
+        east = var.sel(lat=slice(min_lat,max_lat),lon=slice(0.,max_lon),
+                       time=time).isel(lev=0)
+
+    else:   ##isinstance(lev,slice) or isinstance(lev,np.ndarray):
+        west = var.sel(lat=slice(min_lat,max_lat),lon=slice(min_lon,360.),
+                       lev=lev,time=time)
+        west['lon'] = west['lon'] - 360.
+        east = var.sel(lat=slice(min_lat,max_lat),lon=slice(0.,max_lon),
+                       lev=lev,time=time)
+        
+    west_east = xr.concat([west,east],'lon')
+
+    if (reverse_lev):
+        west_east = west_east.reindex(lev=west_east.lev[::-1])
+
+    return west_east
 
 
 def cut_europe_and_interpolate(ds_rsds,ds_rsdsdiff,ds_tas):
