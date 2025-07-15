@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.INFO)
 from regridding_functions import read_and_average_era5_4y
 from regridding_functions import read_and_average_sarah
 from regridding_functions import regrid
-from regridding_functions import read_and_average_era5_marta
+from regridding_functions import read_and_average_era5_modified
 from regridding_functions import read_and_average_cmip
 import os
 
@@ -38,11 +38,11 @@ def bias_factor_era5_model(model, period, variant, direct_bias_factor_era5_sarah
 
 
     # Compute the required variables for total bias factor calculation
-    rsds_era5_mean_BOC = read_and_average_era5_marta('influx_direct')  # mean of era5 historical period for each grid cell
+    rsds_era5_mean_BOC = read_and_average_era5_modified('influx_direct')  # mean of era5 historical period for each grid cell
     rsds_model_mean_BOC = read_and_average_cmip(f'SFCRAD/{model}/{period}/{variant}/', 'rsds')  # mean of model of historical period for each grid cell
     rsdsdiff_model_mean_BOC = read_and_average_cmip(f'SFCRAD/{model}/{period}/{variant}/', "rsdsdiff") 
-    rsdsdiff_era5_mean_BOC = read_and_average_era5_marta("influx_diffuse") 
-    temp_era5_mean_BOC = read_and_average_era5_marta("temperature")  # mean of era5 historical period for each grid cell
+    rsdsdiff_era5_mean_BOC = read_and_average_era5_modified("influx_diffuse") 
+    temp_era5_mean_BOC = read_and_average_era5_modified("temperature")  # mean of era5 historical period for each grid cell
     temp_model_mean_BOC = read_and_average_cmip(f'SFCRAD//{model}/{period}/{variant}/', 'tas')  # mean of model of historical period for each grid cell
 
     rsds_era5_mean_BOC = rsds_era5_mean_BOC.sel(x=slice(-12, 35), y=slice(33, 64.8))

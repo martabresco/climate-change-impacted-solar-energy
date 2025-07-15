@@ -12,7 +12,7 @@ import xesmf as xe
 from datetime import datetime
 import pandas as pd
 
-def read_and_average_era5_marta(field="influx_direct"):
+def read_and_average_era5_modified(field="influx_direct"):
     """Read a single NetCDF file containing multiple years and compute the long-term mean"""
     
     # Path to the single file containing data for multiple years
@@ -29,35 +29,6 @@ def read_and_average_era5_marta(field="influx_direct"):
 
     # Compute the long-term mean of the selected field over the time dimension
     return df[field].mean(dim="time")
-
-import xarray as xr
-import pandas as pd
-
-import xarray as xr
-import pandas as pd
-
-def read_and_average_era5_3h(field="influx_direct"):
-
-
-    # Path to the data and files for multiple years
-    path = "/groups/EXTREMES/cutouts/"
-    files = [f'{path}europe-{year}-era5.nc' for year in range(1980, 2015)]
-
-    # Open multiple ERA5 datasets
-    ds = xr.open_mfdataset(files, combine="by_coords", join="inner")
-    
-    # Ensure time is sorted (important for correct resampling)
-    ds = ds.sortby("time")
-    irradiance_3h_accumulated = (ds[field].resample(time="3H", label="left", closed="right").sum())
-
-
-    irradiance_3h_accumulated["time"] = irradiance_3h_accumulated["time"] + pd.Timedelta(hours=1.5)
-
-    # Step 5: Compute the long-term mean over time
-    mean_flux_3h_long_term = irradiance_3h_accumulated.mean(dim="time")
-
-    return mean_flux_3h_long_term
-
 
 
 def read_and_average_era5_4y(field="influx_direct"):
@@ -129,27 +100,6 @@ def read_and_average_cmip(diri,field="rsds"):
     df = xr.open_mfdataset(files,combine="by_coords")
 
     return df[field].mean(dim="time")
-
-def read_and_average_cmip_power_EOC(diri,field="specific generation"):
-    path = "/groups/FutureWind/"+diri
-    file = "rsds_rsdsdiff_tas"
-    
-    files = [f'{path+file}_{year}.nc' for year in range(2015, 2101)]
-    print(files)
-    df = xr.open_mfdataset(files,combine="by_coords")
-
-    return df[field].mean(dim="time")
-
-def read_and_average_cmip_power_BOC(diri,field="specific generation"):
-    path = "/groups/FutureWind/"+diri
-    file = "rsds_rsdsdiff_tas"
-    
-    files = [f'{path+file}_{year}.nc' for year in range(1980, 2015)]
-    print(files)
-    df = xr.open_mfdataset(files,combine="by_coords")
-
-    return df[field].mean(dim="time")
-
 
 
 def regrid(ds_in, ds_out, method='conservative'):

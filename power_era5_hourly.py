@@ -1,26 +1,11 @@
 from era5_power_yearly import collect_files_era5
 import re, os
 import xarray as xr
-from regridding_functions import read_and_average_era5_4y, read_and_average_sarah, regrid
+from regridding_functions import regrid
 from bias_correction import bias_factor_era5_sarah
 
 from atlite.convert import convert_pv
-from atlite.resource import (
-    get_cspinstallationconfig,
-    get_solarpanelconfig,
-    get_windturbineconfig,
-    windturbine_smooth,
-)
-from atlite.pv.irradiation import TiltedIrradiation
-from atlite.pv.orientation import SurfaceOrientation, get_orientation
-from atlite.pv.solar_panel_model import SolarPanelModel
-from atlite.pv.solar_position import SolarPosition
-from atlite.resource import (
-    get_cspinstallationconfig,
-    get_solarpanelconfig,
-    get_windturbineconfig,
-    windturbine_smooth,
-)
+from atlite.pv.orientation import get_orientation
 
 
 

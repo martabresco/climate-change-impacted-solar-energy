@@ -80,7 +80,7 @@ def SolarPosition(ds, time_shift="0H"):
 
     ra = arctan2(cos(ep) * sin(l), cos(l))  # right ascension (rad)
     lmst = (6.697375 + (hour + minute / 60.0) + 0.0657098242 * n) * 15.0 + ds["lon"]
-    h = (radians(lmst) - ra + pi) % (2 * pi) - pi  # hour angle (rad)
+    h = (radians(lmst) - ra + np.pi) % (2 * np.pi) - np.pi  # hour angle (rad)
 
     dec = arcsin(sin(ep) * sin(l))  # declination (rad)
 
@@ -97,7 +97,7 @@ def SolarPosition(ds, time_shift="0H"):
             min=-1.0, max=1.0
         )
     )
-    az = az.where(h <= 0, 2 * pi - az).rename("azimuth")
+    az = az.where(h <= 0, 2 * np.pi - az).rename("azimuth")
     az.attrs["time shift"] = f"{time_shift}"
     az.attrs["units"] = "rad"
 
@@ -156,7 +156,7 @@ def make_latitude_optimal():
         slope[~below_50] = np.radians(40.0)
 
         # South orientation for panels on northern hemisphere and vice versa
-        azimuth = np.where(lat.values < 0, 0, pi)
+        azimuth = np.where(lat.values < 0, 0, np.pi)
         return dict(
             slope=xr.DataArray(slope, coords=lat.coords),
             azimuth=xr.DataArray(azimuth, coords=lat.coords),
