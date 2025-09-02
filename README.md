@@ -1,7 +1,7 @@
 # Climate-Change-Impacted Solar Energy Generation
 This project analyzes how solar energy generation across Europe is affected by climate change, using satellite data (SARAH-3), reanalysis (ERA5) and climate model data (CMIP6). It includes bias correction, capacity factor (CF) calculations, temperature effects, and energy drought statistics.
 
-> **Note:** Data files (`.nc`, `.csv`) are not included in the GitHub repository. They are stored in Sophia ("/work/users/s233224/Climate-Change-Impacted-Solar-Energy-Generation-backup/")
+> **Note:** Data files (`.nc`, `.csv`) are not included in the GitHub repository. They are stored in Sophia (/groups/EXTREMES/s233224/)
 
 ---
 
@@ -37,36 +37,36 @@ This project analyzes how solar energy generation across Europe is affected by c
   `/groups/EXTREMES/SARAH-3/`
 
 - **Power CF**:  
-  `/work/users/s233224/Climate-Change-Impacted-Solar-Energy-Generation-backup/power/`  
+  `/groups/EXTREMES/s233224/power/`  
   Contains 3h CF for each model and period, original grid and 1x1 in `.nc`. Also contains `.csv` files for statistical results and differences BoC/EoC for solar CF (yearly, seasonal) and energy droughts.  
   In the folder with regridded data, for each model and period there is: 3-hour solar CF, seasonal CF, and yearly `.nc`. Also one `.nc` file with solar drought events per period, a summary file (per country), and a `.csv` with event info (location, year, season, start month, duration).
 
 - **temp_diff**:  
-  `/work/users/s233224/Climate-Change-Impacted-Solar-Energy-Generation-backup/temp_diff/`  
+  `/groups/EXTREMES/s233224/temp_diff/`  
   Contains temperature differences (absolute, relative) per model in original grid resolution
 
 - **temp_diff (regridded)**:  
-  `/work/users/s233224/Climate-Change-Impacted-Solar-Energy-Generation-backup/temp_diff_1x1/`  
+  `/groups/EXTREMES/s233224//temp_diff_1x1/`  
   Temperature differences regridded to 1x1
 
 - **bias factors**:  
-  `/work/users/s233224/Climate-Change-Impacted-Solar-Energy-Generation-backup/bias_factors/`  
+  `/groups/EXTREMES/s233224/bias_factors/`  
   Contains per-model, per-component bias correction factors
 
 - **power_Era5_h**:  
-  `/work/users/s233224/Climate-Change-Impacted-Solar-Energy-Generation-backup/power_Era5_h/`  
+  `/groups/EXTREMES/s233224/power_Era5_h/`  
   Hourly solar CF from ERA5
 
 - **power_Era5_h_1x1**:  
-  `/work/users/s233224/Climate-Change-Impacted-Solar-Energy-Generation-backup/power_Era5_h_1x1/`  
+  `/groups/EXTREMES/s233224/power_Era5_h_1x1/`  
   ERA5 hourly power regridded to 1x1
 
 - **power_Era5_yearly**:  
-  `/work/users/s233224/Climate-Change-Impacted-Solar-Energy-Generation-backup/power_Era5_yearly/`  
+  `/groups/EXTREMES/s233224/power_Era5_yearly/`  
   ERA5 yearly solar power on 0.25° grid
 
 - **power_notemp**:  
-  `/work/users/s233224/Climate-Change-Impacted-Solar-Energy-Generation-backup/power_notemp/`  
+  `/groups/EXTREMES/s233224/power_notemp/`  
   Solar CF from CMIP6 **removing temperature effect**, regridded to 1x1
 
 - **albedo**:  
